@@ -1,55 +1,65 @@
 import { useProducts } from "../context/ProductContext";
+import { Link } from "react-router-dom";
 
 const ProductList = () => {
   const { products, loading, error } = useProducts();
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"></div>
+      <div className="min-h-screen flex justify-center items-center bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
+      <div className="min-h-screen flex justify-center items-center bg-gray-900">
         <div className="text-red-500 text-xl">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Our Products</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="container mx-auto py-8 px-4 bg-gray-900">
+      <h1 className="text-4xl font-bold mb-8 text-center text-white">
+        Our Products
+      </h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+            className="bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-700 flex flex-col"
           >
-            <div className="h-48 bg-gray-200 flex items-center justify-center p-4">
+            <div className="h-56 flex items-center justify-center bg-gray-850 p-6 relative">
+              <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 opacity-90"></div>
               <img
                 src={product.image}
                 alt={product.title}
-                className="h-full object-contain"
+                className="h-full object-contain relative z-10"
               />
             </div>
-            <div className="p-4">
-              <h2 className="text-lg font-semibold mb-2 line-clamp-2 h-14">
+            <div className="p-5 flex flex-col flex-grow border-t border-gray-700">
+              <h2 className="text-lg font-bold mb-2 text-white line-clamp-2 h-14">
                 {product.title}
               </h2>
-              <p className="text-gray-700 mb-2 line-clamp-3 h-18">
+              <p className="text-gray-300 mb-4 line-clamp-3 text-sm flex-grow">
                 {product.description}
               </p>
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-xl font-bold">
+              <div className="flex justify-between items-center mt-auto">
+                <span className="text-xl font-bold text-indigo-400">
                   ${product.price.toFixed(2)}
                 </span>
-                <span className="px-2 py-1 bg-gray-200 text-gray-800 text-sm rounded-full">
+                <span className="px-3 py-1 bg-gray-700 text-gray-300 text-sm rounded-full font-medium">
                   {product.category}
                 </span>
               </div>
+              <Link
+                to={`/product/${product.id}`}
+                className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-colors text-center"
+              >
+                Product Details
+              </Link>
             </div>
           </div>
         ))}
