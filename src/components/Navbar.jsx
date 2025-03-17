@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
+  const { cartCount, wishlistCount } = useCart();
+
   return (
     <nav className="bg-gray-800 shadow-md">
       <div className="container mx-auto px-4">
@@ -25,22 +28,16 @@ const Navbar = () => {
               Products
             </Link>
             <Link
-              to="/"
+              to="/cart"
               className="text-gray-300 hover:text-indigo-400 font-medium transition-colors duration-200"
             >
-              Categories
+              Cart
             </Link>
             <Link
-              to="/"
+              to="/wishlist"
               className="text-gray-300 hover:text-indigo-400 font-medium transition-colors duration-200"
             >
-              About
-            </Link>
-            <Link
-              to="/"
-              className="text-gray-300 hover:text-indigo-400 font-medium transition-colors duration-200"
-            >
-              Contact
+              Wishlist
             </Link>
           </div>
 
@@ -66,7 +63,28 @@ const Navbar = () => {
                 ></path>
               </svg>
             </div>
-            <Link to="/" className="relative">
+            <Link to="/wishlist" className="relative">
+              <svg
+                className="w-6 h-6 text-gray-300 hover:text-red-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                ></path>
+              </svg>
+              {wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+            <Link to="/cart" className="relative">
               <svg
                 className="w-6 h-6 text-gray-300 hover:text-indigo-400"
                 fill="none"
@@ -81,9 +99,11 @@ const Navbar = () => {
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 ></path>
               </svg>
-              <span className="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>

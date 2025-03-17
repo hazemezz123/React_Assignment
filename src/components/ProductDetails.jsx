@@ -1,12 +1,15 @@
 import { useParams, Link } from "react-router-dom";
 import { useProducts } from "../context/ProductContext";
+import { useCart } from "../context/CartContext";
 import { useEffect, useState } from "react";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { products } = useProducts();
+  const { addToCart, toggleWishlist, isInWishlist } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -32,6 +35,25 @@ const ProductDetails = () => {
 
     fetchProductDetails();
   }, [id, products]);
+
+  const handleAddToCart = () => {
+    if (product) {
+      // Add the product with the selected quantity
+      for (let i = 0; i < quantity; i++) {
+        addToCart(product);
+      }
+    }
+  };
+
+  const incrementQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
 
   if (loading) {
     return (
@@ -91,6 +113,28 @@ const ProductDetails = () => {
                 alt={product.title}
                 className="max-h-96 object-contain relative z-10"
               />
+              {/* Wishlist button */}
+              <button
+                onClick={() => toggleWishlist(product)}
+                className="absolute top-4 right-4 z-20 bg-gray-700 p-2 rounded-full hover:bg-gray-600 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill={isInWishlist(product.id) ? "currentColor" : "none"}
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className={`w-6 h-6 ${
+                    isInWishlist(product.id) ? "text-red-500" : "text-gray-300"
+                  }`}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </button>
             </div>
 
             <div className="md:w-1/2 p-8">
@@ -140,12 +184,63 @@ const ProductDetails = () => {
                 </p>
               </div>
 
-              <div className="mt-8 space-y-4">
-                <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg font-medium transition-colors">
+              <div className="mt-8">
+                <div className="flex items-center mb-4">
+                  <span className="text-white mr-4">Quantity:</span>
+                  <div className="flex items-center border border-gray-600 rounded-lg">
+                    <button
+                      onClick={decrementQuantity}
+                      className="px-3 py-1 text-white hover:bg-gray-700 focus:outline-none"
+                    >
+                      -
+                    </button>
+                    <span className="px-3 py-1 text-white">{quantity}</span>
+                    <button
+                      onClick={incrementQuantity}
+                      className="px-3 py-1 text-white hover:bg-gray-700 focus:outline-none"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-4">
+                <button
+                  onClick={handleAddToCart}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-2"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                  </svg>
                   Add to Cart
                 </button>
-                <button className="w-full bg-transparent border border-indigo-600 text-indigo-400 hover:bg-indigo-800 py-3 px-6 rounded-lg font-medium transition-colors">
-                  Add to Wishlist
+                <button
+                  onClick={() => toggleWishlist(product)}
+                  className="w-full bg-transparent border border-indigo-600 text-indigo-400 hover:bg-indigo-800 py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-2"
+                    fill={isInWishlist(product.id) ? "currentColor" : "none"}
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                  {isInWishlist(product.id)
+                    ? "Remove from Wishlist"
+                    : "Add to Wishlist"}
                 </button>
               </div>
             </div>

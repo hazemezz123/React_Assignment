@@ -1,8 +1,10 @@
 import { useProducts } from "../context/ProductContext";
+import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 
 const ProductList = () => {
   const { products, loading, error } = useProducts();
+  const { addToCart, toggleWishlist, isInWishlist } = useCart();
 
   if (loading) {
     return (
@@ -38,6 +40,31 @@ const ProductList = () => {
                 alt={product.title}
                 className="h-full object-contain relative z-10"
               />
+              {/* Wishlist button */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleWishlist(product);
+                }}
+                className="absolute top-2 right-2 z-20 text-gray-300 hover:text-red-500 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill={isInWishlist(product.id) ? "currentColor" : "none"}
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className={`w-6 h-6 ${
+                    isInWishlist(product.id) ? "text-red-500" : "text-gray-300"
+                  }`}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </button>
             </div>
             <div className="p-5 flex flex-col flex-grow border-t border-gray-700">
               <h2 className="text-lg font-bold mb-2 text-white line-clamp-2 h-14">
@@ -54,12 +81,20 @@ const ProductList = () => {
                   {product.category}
                 </span>
               </div>
-              <Link
-                to={`/product/${product.id}`}
-                className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-colors text-center"
-              >
-                Product Details
-              </Link>
+              <div className="grid grid-cols-2 gap-3 mt-4">
+                <Link
+                  to={`/product/${product.id}`}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-colors text-center"
+                >
+                  Details
+                </Link>
+                <button
+                  onClick={() => addToCart(product)}
+                  className="bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-medium transition-colors"
+                >
+                  Add to Cart
+                </button>
+              </div>
             </div>
           </div>
         ))}
