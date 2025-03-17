@@ -34,13 +34,11 @@ export const CartProvider = ({ children }) => {
     setCartCount(cart.reduce((total, item) => total + item.quantity, 0));
   }, [cart]);
 
-  // Update localStorage and counts whenever wishlist changes
   useEffect(() => {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
     setWishlistCount(wishlist.length);
   }, [wishlist]);
 
-  // Add item to cart
   const addToCart = (product) => {
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex(
@@ -48,7 +46,6 @@ export const CartProvider = ({ children }) => {
       );
 
       if (existingItemIndex >= 0) {
-        // If item already exists, increase quantity
         const updatedCart = [...prevCart];
         updatedCart[existingItemIndex] = {
           ...updatedCart[existingItemIndex],
@@ -56,7 +53,6 @@ export const CartProvider = ({ children }) => {
         };
         return updatedCart;
       } else {
-        // If item doesn't exist, add it with quantity 1
         return [...prevCart, { ...product, quantity: 1 }];
       }
     });
