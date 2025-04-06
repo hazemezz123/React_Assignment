@@ -16,6 +16,8 @@ import ProfilePage from "./components/ProfilePage";
 import OrderPage from "./components/OrderPage";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
+import BackToTopButton from "./components/BackToTopButton";
 import { AnimatePresence } from "framer-motion";
 
 // Main app wrapper with theme context
@@ -36,6 +38,7 @@ function AppContent() {
       <ProductProvider>
         <CartProvider>
           <Router>
+            <ScrollToTop />
             <div
               className={`flex flex-col min-h-screen ${
                 isDarkMode ? "dark-theme bg-gray-900" : "light-theme bg-gray-50"
@@ -60,6 +63,7 @@ function AppContent() {
                 </AnimatePresence>
               </main>
               <Footer />
+              <BackToTopButton />
             </div>
           </Router>
         </CartProvider>

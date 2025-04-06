@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ScrollLink from "./ScrollLink";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
 
@@ -53,12 +54,12 @@ const NotFound = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <Link
+          <ScrollLink
             to="/"
             className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium transition-colors"
           >
             Go Home
-          </Link>
+          </ScrollLink>
         </motion.div>
       </motion.div>
     </div>

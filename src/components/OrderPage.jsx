@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import ScrollLink from "./ScrollLink";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { motion } from "framer-motion";
@@ -263,7 +264,7 @@ const OrderPage = () => {
                         </div>
 
                         <div className="mt-4 flex space-x-4">
-                          <Link
+                          <ScrollLink
                             to={`/product/${item.id}`}
                             className={`text-xs font-medium ${
                               isDarkMode
@@ -272,7 +273,7 @@ const OrderPage = () => {
                             }`}
                           >
                             View Product
-                          </Link>
+                          </ScrollLink>
                           <button
                             className={`text-xs font-medium ${
                               isDarkMode
@@ -336,12 +337,12 @@ const OrderPage = () => {
             >
               When you place your first order, it will appear here.
             </p>
-            <Link
+            <ScrollLink
               to="/"
               className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium"
             >
               Start Shopping
-            </Link>
+            </ScrollLink>
           </motion.div>
         )}
       </motion.div>

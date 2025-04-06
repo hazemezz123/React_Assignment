@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ScrollLink from "./ScrollLink";
 import { useCart } from "../context/CartContext";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
@@ -90,7 +91,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <ScrollLink to="/" className="flex items-center">
             <motion.span
               className={`text-2xl font-bold ${
                 isDarkMode ? "text-indigo-400" : "text-indigo-600"
@@ -100,11 +101,11 @@ const Navbar = () => {
             >
               FakeStore
             </motion.span>
-          </Link>
+          </ScrollLink>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
+            <ScrollLink
               to="/"
               className={`${
                 isDarkMode
@@ -113,8 +114,8 @@ const Navbar = () => {
               } font-medium transition-colors duration-200`}
             >
               Home
-            </Link>
-            <Link
+            </ScrollLink>
+            <ScrollLink
               to="/products"
               className={`${
                 isDarkMode
@@ -123,8 +124,8 @@ const Navbar = () => {
               } font-medium transition-colors duration-200`}
             >
               Products
-            </Link>
-            <Link
+            </ScrollLink>
+            <ScrollLink
               to="/about"
               className={`${
                 isDarkMode
@@ -133,9 +134,9 @@ const Navbar = () => {
               } font-medium transition-colors duration-200`}
             >
               About Us
-            </Link>
+            </ScrollLink>
             {isAuthenticated() && (
-              <Link
+              <ScrollLink
                 to="/orders"
                 className={`${
                   isDarkMode
@@ -144,9 +145,9 @@ const Navbar = () => {
                 } font-medium transition-colors duration-200`}
               >
                 Orders
-              </Link>
+              </ScrollLink>
             )}
-            <Link
+            <ScrollLink
               to="/cart"
               className={`${
                 isDarkMode
@@ -155,8 +156,8 @@ const Navbar = () => {
               } font-medium transition-colors duration-200`}
             >
               Cart
-            </Link>
-            <Link
+            </ScrollLink>
+            <ScrollLink
               to="/wishlist"
               className={`${
                 isDarkMode
@@ -165,7 +166,7 @@ const Navbar = () => {
               } font-medium transition-colors duration-200`}
             >
               Wishlist
-            </Link>
+            </ScrollLink>
           </div>
 
           {/* Search, Theme Toggle, and Icons */}
@@ -237,7 +238,7 @@ const Navbar = () => {
             </motion.button>
 
             {/* Wishlist Icon */}
-            <Link to="/wishlist" className="relative p-2 mx-1">
+            <ScrollLink to="/wishlist" className="relative p-2 mx-1">
               <motion.div whileTap={{ scale: 0.9 }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -265,10 +266,10 @@ const Navbar = () => {
                   {wishlistCount}
                 </span>
               )}
-            </Link>
+            </ScrollLink>
 
             {/* Cart Icon */}
-            <Link to="/cart" className="relative p-2 mx-1">
+            <ScrollLink to="/cart" className="relative p-2 mx-1">
               <motion.div whileTap={{ scale: 0.9 }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -296,7 +297,7 @@ const Navbar = () => {
                   {cartCount}
                 </span>
               )}
-            </Link>
+            </ScrollLink>
 
             {/* Auth Section */}
             <div className="ml-4 relative hidden md:block">
@@ -368,7 +369,7 @@ const Navbar = () => {
                               {currentUser.email}
                             </div>
                           </div>
-                          <Link
+                          <ScrollLink
                             to="/profile"
                             className={`block px-4 py-2 text-sm ${
                               isDarkMode
@@ -378,8 +379,8 @@ const Navbar = () => {
                             onClick={() => setIsUserMenuOpen(false)}
                           >
                             Your Profile
-                          </Link>
-                          <Link
+                          </ScrollLink>
+                          <ScrollLink
                             to="/orders"
                             className={`block px-4 py-2 text-sm ${
                               isDarkMode
@@ -389,7 +390,7 @@ const Navbar = () => {
                             onClick={() => setIsUserMenuOpen(false)}
                           >
                             Orders
-                          </Link>
+                          </ScrollLink>
                           <button
                             onClick={handleLogout}
                             className={`block w-full text-left px-4 py-2 text-sm ${
@@ -407,7 +408,7 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="flex space-x-4">
-                  <Link
+                  <ScrollLink
                     to="/login"
                     className={`font-medium text-sm ${
                       isDarkMode
@@ -416,8 +417,8 @@ const Navbar = () => {
                     }`}
                   >
                     Sign in
-                  </Link>
-                  <Link
+                  </ScrollLink>
+                  <ScrollLink
                     to="/register"
                     className={`font-medium text-sm px-3 py-1 rounded-md ${
                       isDarkMode
@@ -426,7 +427,7 @@ const Navbar = () => {
                     }`}
                   >
                     Sign up
-                  </Link>
+                  </ScrollLink>
                 </div>
               )}
             </div>
@@ -489,7 +490,7 @@ const Navbar = () => {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Link
+              <ScrollLink
                 to="/"
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isDarkMode
@@ -499,8 +500,8 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
-              </Link>
-              <Link
+              </ScrollLink>
+              <ScrollLink
                 to="/products"
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isDarkMode
@@ -510,8 +511,8 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Products
-              </Link>
-              <Link
+              </ScrollLink>
+              <ScrollLink
                 to="/about"
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isDarkMode
@@ -521,9 +522,9 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 About Us
-              </Link>
+              </ScrollLink>
               {isAuthenticated() && (
-                <Link
+                <ScrollLink
                   to="/orders"
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
                     isDarkMode
@@ -533,10 +534,10 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Orders
-                </Link>
+                </ScrollLink>
               )}
               {isAuthenticated() && (
-                <Link
+                <ScrollLink
                   to="/profile"
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
                     isDarkMode
@@ -546,9 +547,9 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Profile
-                </Link>
+                </ScrollLink>
               )}
-              <Link
+              <ScrollLink
                 to="/cart"
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isDarkMode
@@ -558,8 +559,8 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Cart
-              </Link>
-              <Link
+              </ScrollLink>
+              <ScrollLink
                 to="/wishlist"
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isDarkMode
@@ -569,7 +570,7 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Wishlist
-              </Link>
+              </ScrollLink>
 
               {/* Mobile Auth Options */}
               <div
@@ -595,7 +596,7 @@ const Navbar = () => {
                         {currentUser.email}
                       </div>
                     </div>
-                    <Link
+                    <ScrollLink
                       to="/profile"
                       className={`block px-3 py-2 rounded-md text-base font-medium ${
                         isDarkMode
@@ -605,8 +606,8 @@ const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Your Profile
-                    </Link>
-                    <Link
+                    </ScrollLink>
+                    <ScrollLink
                       to="/orders"
                       className={`block px-3 py-2 rounded-md text-base font-medium ${
                         isDarkMode
@@ -616,7 +617,7 @@ const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Orders
-                    </Link>
+                    </ScrollLink>
                     <button
                       onClick={() => {
                         handleLogout();
@@ -633,7 +634,7 @@ const Navbar = () => {
                   </>
                 ) : (
                   <div className="flex flex-col space-y-2 px-3">
-                    <Link
+                    <ScrollLink
                       to="/login"
                       className={`px-3 py-2 rounded-md text-center font-medium ${
                         isDarkMode
@@ -643,8 +644,8 @@ const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Sign in
-                    </Link>
-                    <Link
+                    </ScrollLink>
+                    <ScrollLink
                       to="/register"
                       className={`px-3 py-2 rounded-md text-center font-medium ${
                         isDarkMode
@@ -654,7 +655,7 @@ const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Sign up
-                    </Link>
+                    </ScrollLink>
                   </div>
                 )}
               </div>
