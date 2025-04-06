@@ -1,76 +1,95 @@
 import { useParams, Link } from "react-router-dom";
 import { useProducts } from "../context/ProductContext";
 import { useCart } from "../context/CartContext";
+import { useTheme } from "../context/ThemeContext";
 import { useEffect, useState } from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  // eslint-disable-next-line no-unused-vars
   const { products } = useProducts();
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
+  const { isDarkMode } = useTheme();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        if (products.length > 0) {
-          const foundProduct = products.find((p) => p.id === parseInt(id));
-          setProduct(foundProduct);
-          setLoading(false);
-        } else {
-          // Fetch the individual product if products aren't loaded
-          const response = await fetch(
-            `https://fakestoreapi.com/products/${id}`
+        setLoading(true);
+        console.log(`Fetching product with id: ${id}`);
+
+        // Always try direct API fetch for most reliable data
+        const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch product with status: ${response.status}`
           );
-          const data = await response.json();
-          setProduct(data);
-          setLoading(false);
         }
+
+        const data = await response.json();
+        console.log("Product data from API:", data);
+
+        if (!data || Object.keys(data).length === 0) {
+          throw new Error("Received empty product data");
+        }
+
+        setProduct(data);
+        setError(null);
       } catch (error) {
         console.error("Error fetching product details:", error);
+        setError(error.message);
+        setProduct(null);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchProductDetails();
-  }, [id, products]);
+  }, [id]);
 
   const handleAddToCart = () => {
     if (product) {
-      // Add the product with the selected quantity
       for (let i = 0; i < quantity; i++) {
         addToCart(product);
       }
+      alert(`Added ${quantity} of ${product.title} to cart`);
     }
   };
 
-  const incrementQuantity = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const decrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  };
+  const incrementQuantity = () => setQuantity((prev) => prev + 1);
+  const decrementQuantity = () =>
+    quantity > 1 && setQuantity((prev) => prev - 1);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
+      <div
+        className={`min-h-screen flex justify-center items-center ${
+          isDarkMode ? "bg-gray-900" : "bg-gray-50"
+        }`}
+      >
+        <div
+          className={`w-16 h-16 border-4 border-t-4 border-blue-500 rounded-full animate-spin`}
+        ></div>
       </div>
     );
   }
 
-  if (!product) {
+  if (error || !product) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-center p-4">
-        <h1 className="text-3xl font-bold mb-4 text-white">
-          Product Not Found
-        </h1>
-        <p className="text-gray-300 mb-6">
-          The product you're looking for doesn't exist or has been removed.
+      <div
+        className={`min-h-screen flex flex-col items-center justify-center p-4 ${
+          isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-800"
+        }`}
+      >
+        <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
+        <p className="mb-6">
+          {error ||
+            "The product you're looking for doesn't exist or has been removed."}
         </p>
         <Link
           to="/"
@@ -83,11 +102,17 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 py-12 px-4 sm:px-6">
+    <div
+      className={`min-h-screen ${
+        isDarkMode ? "bg-gray-900" : "bg-gray-50"
+      } py-8 px-4`}
+    >
       <div className="max-w-6xl mx-auto">
         <Link
           to="/"
-          className="inline-flex items-center text-indigo-400 hover:text-indigo-300 mb-8 transition-colors"
+          className={`inline-flex items-center mb-8 ${
+            isDarkMode ? "text-indigo-400" : "text-indigo-600"
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -104,51 +129,65 @@ const ProductDetails = () => {
           Back to Products
         </Link>
 
-        <div className="bg-gray-800 rounded-xl shadow-xl overflow-hidden">
+        <div
+          className={`${
+            isDarkMode ? "bg-gray-800" : "bg-white"
+          } rounded-xl shadow-xl overflow-hidden border ${
+            isDarkMode ? "border-gray-700" : "border-gray-200"
+          }`}
+        >
           <div className="md:flex">
-            <div className="md:w-1/2 relative flex items-center justify-center p-8">
-              <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 opacity-90"></div>
-              <img
-                src={product.image}
-                alt={product.title}
-                className="max-h-96 object-contain relative z-10"
-              />
-              {/* Wishlist button */}
-              <button
-                onClick={() => toggleWishlist(product)}
-                className="absolute top-4 right-4 z-20 bg-gray-700 p-2 rounded-full hover:bg-gray-600 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill={isInWishlist(product.id) ? "currentColor" : "none"}
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className={`w-6 h-6 ${
-                    isInWishlist(product.id) ? "text-red-500" : "text-gray-300"
-                  }`}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-              </button>
+            <div className="md:w-1/2 p-8 flex items-center justify-center">
+              <div className="relative">
+                <div
+                  className={`absolute inset-0 ${
+                    isDarkMode
+                      ? "bg-gradient-to-br from-gray-700 to-gray-900"
+                      : "bg-gradient-to-br from-gray-50 to-white"
+                  } rounded-lg`}
+                ></div>
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="relative z-10 max-h-80 object-contain"
+                  onError={(e) => {
+                    console.log("Image failed to load, using placeholder");
+                    e.target.src =
+                      "https://via.placeholder.com/400?text=Image+Not+Found";
+                  }}
+                />
+              </div>
             </div>
 
             <div className="md:w-1/2 p-8">
-              <div className="uppercase tracking-wide text-sm text-indigo-400 font-semibold">
+              <div
+                className={`uppercase tracking-wide text-sm ${
+                  isDarkMode ? "text-indigo-400" : "text-indigo-600"
+                } font-semibold`}
+              >
                 {product.category}
               </div>
-              <h1 className="mt-2 text-3xl font-bold text-white">
+
+              <h1
+                className={`mt-2 text-3xl font-bold ${
+                  isDarkMode ? "text-white" : "text-gray-800"
+                }`}
+              >
                 {product.title}
               </h1>
 
               <div className="mt-4">
-                <span className="text-3xl font-bold text-indigo-400">
-                  ${product.price.toFixed(2)}
+                <span
+                  className={`text-3xl font-bold ${
+                    isDarkMode ? "text-indigo-400" : "text-indigo-600"
+                  }`}
+                >
+                  $
+                  {typeof product.price === "number"
+                    ? product.price.toFixed(2)
+                    : "0.00"}
                 </span>
+
                 {product.rating && (
                   <div className="mt-2 flex items-center">
                     <div className="flex items-center">
@@ -156,9 +195,11 @@ const ProductDetails = () => {
                         <svg
                           key={i}
                           className={`h-5 w-5 ${
-                            i < Math.round(product.rating.rate)
+                            i < Math.round(product.rating.rate || 0)
                               ? "text-yellow-500"
-                              : "text-gray-500"
+                              : isDarkMode
+                              ? "text-gray-500"
+                              : "text-gray-300"
                           }`}
                           fill="currentColor"
                           viewBox="0 0 20 20"
@@ -167,37 +208,77 @@ const ProductDetails = () => {
                         </svg>
                       ))}
                     </div>
-                    <span className="ml-2 text-gray-300">
-                      {product.rating.rate} out of 5 ({product.rating.count}{" "}
-                      reviews)
+                    <span
+                      className={`ml-2 ${
+                        isDarkMode ? "text-gray-300" : "text-gray-600"
+                      }`}
+                    >
+                      {product.rating.rate || "0"} out of 5 (
+                      {product.rating.count || 0} reviews)
                     </span>
                   </div>
                 )}
               </div>
 
-              <div className="mt-6 border-t border-gray-700 pt-6">
-                <h2 className="text-xl font-bold text-white mb-4">
+              <div
+                className={`mt-6 border-t ${
+                  isDarkMode ? "border-gray-700" : "border-gray-200"
+                } pt-6`}
+              >
+                <h2
+                  className={`text-xl font-bold ${
+                    isDarkMode ? "text-white" : "text-gray-800"
+                  } mb-4`}
+                >
                   Description
                 </h2>
-                <p className="text-gray-300 leading-relaxed">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-300" : "text-gray-600"
+                  } leading-relaxed`}
+                >
                   {product.description}
                 </p>
               </div>
 
               <div className="mt-8">
                 <div className="flex items-center mb-4">
-                  <span className="text-white mr-4">Quantity:</span>
-                  <div className="flex items-center border border-gray-600 rounded-lg">
+                  <span
+                    className={`${
+                      isDarkMode ? "text-white" : "text-gray-800"
+                    } mr-4`}
+                  >
+                    Quantity:
+                  </span>
+                  <div
+                    className={`flex items-center border ${
+                      isDarkMode ? "border-gray-600" : "border-gray-300"
+                    } rounded-lg`}
+                  >
                     <button
                       onClick={decrementQuantity}
-                      className="px-3 py-1 text-white hover:bg-gray-700 focus:outline-none"
+                      className={`px-3 py-1 ${
+                        isDarkMode
+                          ? "text-white hover:bg-gray-700"
+                          : "text-gray-800 hover:bg-gray-100"
+                      } focus:outline-none`}
                     >
                       -
                     </button>
-                    <span className="px-3 py-1 text-white">{quantity}</span>
+                    <span
+                      className={`px-3 py-1 ${
+                        isDarkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
+                      {quantity}
+                    </span>
                     <button
                       onClick={incrementQuantity}
-                      className="px-3 py-1 text-white hover:bg-gray-700 focus:outline-none"
+                      className={`px-3 py-1 ${
+                        isDarkMode
+                          ? "text-white hover:bg-gray-700"
+                          : "text-gray-800 hover:bg-gray-100"
+                      } focus:outline-none`}
                     >
                       +
                     </button>
@@ -220,9 +301,14 @@ const ProductDetails = () => {
                   </svg>
                   Add to Cart
                 </button>
+
                 <button
                   onClick={() => toggleWishlist(product)}
-                  className="w-full bg-transparent border border-indigo-600 text-indigo-400 hover:bg-indigo-800 py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center"
+                  className={`w-full bg-transparent border ${
+                    isDarkMode
+                      ? "border-indigo-600 text-indigo-400 hover:bg-indigo-800"
+                      : "border-indigo-500 text-indigo-600 hover:bg-indigo-50"
+                  } py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

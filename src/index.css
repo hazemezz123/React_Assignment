@@ -2,17 +2,194 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* Theme classes */
+.dark-theme {
+  --bg-primary: #111827; /* gray-900 */
+  --bg-secondary: #1f2937; /* gray-800 */
+  --bg-tertiary: #374151; /* gray-700 */
+  --text-primary: #f9fafb; /* gray-50 */
+  --text-secondary: #d1d5db; /* gray-300 */
+  --accent-primary: #6366f1; /* indigo-500 */
+  --accent-hover: #4f46e5; /* indigo-600 */
+  --border-color: #4b5563; /* gray-600 */
+  --card-bg: #1f2937; /* gray-800 */
+  --card-border: #374151; /* gray-700 */
+  --input-bg: #374151; /* gray-700 */
+  --input-text: #f9fafb; /* gray-50 */
+  --input-border: #4b5563; /* gray-600 */
+  --success: #10b981; /* emerald-500 */
+  --error: #ef4444; /* red-500 */
+  --warning: #f59e0b; /* amber-500 */
+}
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.light-theme {
+  --bg-primary: #f9fafb; /* gray-50 */
+  --bg-secondary: #ffffff; /* white */
+  --bg-tertiary: #f3f4f6; /* gray-100 */
+  --text-primary: #1f2937; /* gray-800 */
+  --text-secondary: #4b5563; /* gray-600 */
+  --accent-primary: #4f46e5; /* indigo-600 */
+  --accent-hover: #4338ca; /* indigo-700 */
+  --border-color: #e5e7eb; /* gray-200 */
+  --card-bg: #ffffff; /* white */
+  --card-border: #e5e7eb; /* gray-200 */
+  --input-bg: #f3f4f6; /* gray-100 */
+  --input-text: #1f2937; /* gray-800 */
+  --input-border: #e5e7eb; /* gray-200 */
+  --success: #059669; /* emerald-600 */
+  --error: #dc2626; /* red-600 */
+  --warning: #d97706; /* amber-600 */
+}
+
+/* Animation classes */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-hover);
+}
+
+/* Responsive loading spinner */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--accent-primary);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom focus style */
+*:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Custom selection style */
+::selection {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
+/* Custom list styles */
+ul.custom-list {
+  list-style: none;
+  padding-left: 1.5rem;
+}
+
+ul.custom-list li {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+ul.custom-list li:before {
+  content: "";
+  position: absolute;
+  left: -1.25rem;
+  top: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--accent-primary);
+}
+
+/* Modern card hover effect */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Pill badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Custom button focus ring */
+.btn-focus-ring:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+}
+
+/* Fix for product details visibility */
+.product-details-container {
+  position: relative;
+  z-index: 10;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+.product-card {
+  position: relative;
+  z-index: 20;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+.product-card img {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  z-index: 30;
+  position: relative;
 }
